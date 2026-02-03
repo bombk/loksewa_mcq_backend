@@ -1,10 +1,10 @@
 from rest_framework import viewsets, filters
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import BlogPost, Vacancy, VideoSource, HeroSlide, ContactMessage, ChatbotKnowledge, AnnouncementPopup
+from .models import BlogPost, Vacancy, VideoSource, HeroSlide, ContactMessage, ChatbotKnowledge, AnnouncementPopup, Book
 from .serializers import (
     BlogPostSerializer, VacancySerializer, VideoSourceSerializer, 
-    HeroSlideSerializer, ContactMessageSerializer, AnnouncementPopupSerializer
+    HeroSlideSerializer, ContactMessageSerializer, AnnouncementPopupSerializer, BookSerializer
 )
 
 class BlogPostViewSet(viewsets.ModelViewSet):
@@ -33,6 +33,19 @@ class ContactMessageViewSet(viewsets.ModelViewSet):
     queryset = ContactMessage.objects.all().order_by('-created_at')
     serializer_class = ContactMessageSerializer
     http_method_names = ['post', 'get', 'delete'] # Limit to POST (frontend), GET/DELETE (admin via API if needed)
+
+class BookViewSet(viewsets.ModelViewSet):
+    queryset = Book.objects.all().order_by('-created_at')
+    serializer_class = BookSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title', 'author', 'description']
+
+    def get_queryset(self):
+        queryset = Book.objects.all().order_by('-created_at')
+        category_id = self.request.query_params.get('category', None)
+        if category_id is not None:
+            queryset = queryset.filter(category_id=category_id)
+        return queryset
 
 class AnnouncementPopupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = AnnouncementPopup.objects.all()

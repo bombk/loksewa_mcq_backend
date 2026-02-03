@@ -5,7 +5,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 django.setup()
 
 from quiz.models import Category, Question, Option, QuestionPaper
-from content.models import BlogPost, Vacancy, VideoSource, HeroSlide
+from content.models import BlogPost, Vacancy, VideoSource, HeroSlide, Book
 from django.utils import timezone
 
 # Clear existing data
@@ -15,6 +15,7 @@ Vacancy.objects.all().delete()
 VideoSource.objects.all().delete()
 HeroSlide.objects.all().delete()
 QuestionPaper.objects.all().delete()
+Book.objects.all().delete()
 
 cats_data = {
     'General Knowledge': [
@@ -116,7 +117,7 @@ med_cat = Category.objects.get(name='Medical')
 admin_cat = Category.objects.get(name='Administration')
 
 QuestionPaper.objects.create(
-    title='Civil Engineering 2080 - Loksewa Paper',
+    title='Civil Engineering 2080 - LokSewa Paper',
     category=eng_cat,
     description='Full retrospective of the 2080 Civil Engineering public service commission exam.',
     file='question_papers/civil_2080.pdf'
@@ -134,4 +135,46 @@ QuestionPaper.objects.create(
     file='question_papers/admin_mock.pdf'
 )
 
-print("Successfully seeded extensive data including papers.")
+# Add Books
+gen_cat = Category.objects.get(name='General Knowledge')
+sci_cat = Category.objects.get(name='Science')
+tech_cat = Category.objects.get(name='Technology')
+
+books_to_add = [
+    {
+        'title': 'LokSewa Guru: General Awareness 2081',
+        'author': 'Dr. K.P. Sharma',
+        'category': gen_cat,
+        'description': 'The definitive guide for General Knowledge section of LokSewa exams. Updated with 2080-81 current affairs.',
+        'cover': 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=1000',
+        'pdf': 'books/gk_2081.pdf'
+    },
+    {
+        'title': 'Science & Environment for Public Service',
+        'author': 'Prof. Rita Thapa',
+        'category': sci_cat,
+        'description': 'Comprehensive coverage of science, health, and environment topics specifically for administrative and technical roles.',
+        'cover': 'https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=1000',
+        'pdf': 'books/science_guide.pdf'
+    },
+    {
+        'title': 'ICT for LokSewa: Practical Approach',
+        'author': 'Eng. Bikram Sapkota',
+        'category': tech_cat,
+        'description': 'Master the Computer/ICT portion of your exam with simplified explanations and previous year question analysis.',
+        'cover': 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=1000',
+        'pdf': 'books/ict_loksewa.pdf'
+    }
+]
+
+for b_data in books_to_add:
+    Book.objects.create(
+        title=b_data['title'],
+        author=b_data['author'],
+        category=b_data['category'],
+        description=b_data['description'],
+        cover_image=b_data['cover'], # Note: assigning string to imagefield works if it's already a URL or if handled by storage
+        pdf_file=b_data['pdf']
+    )
+
+print("Successfully seeded extensive data including papers and books.")

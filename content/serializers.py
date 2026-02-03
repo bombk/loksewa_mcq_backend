@@ -1,5 +1,12 @@
 from rest_framework import serializers
-from .models import BlogPost, Vacancy, VideoSource, HeroSlide, ContactMessage, AnnouncementPopup
+from .models import BlogPost, Vacancy, VideoSource, HeroSlide, ContactMessage, AnnouncementPopup, Book
+
+class BookSerializer(serializers.ModelSerializer):
+    category_name = serializers.ReadOnlyField(source='category.name')
+    
+    class Meta:
+        model = Book
+        fields = ['id', 'title', 'author', 'category', 'category_name', 'cover_image', 'pdf_file', 'description', 'created_at']
 
 class AnnouncementPopupSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,5 +1,11 @@
 from django.contrib import admin
-from .models import BlogPost, Vacancy, VideoSource, HeroSlide, ContactMessage, ChatbotKnowledge, AnnouncementPopup
+from .models import BlogPost, Vacancy, VideoSource, HeroSlide, ContactMessage, ChatbotKnowledge, AnnouncementPopup, Book
+
+@admin.register(Book)
+class BookAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'category', 'created_at')
+    search_fields = ('title', 'author', 'description')
+    list_filter = ('category', 'created_at')
 
 @admin.register(AnnouncementPopup)
 class AnnouncementPopupAdmin(admin.ModelAdmin):
