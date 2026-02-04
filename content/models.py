@@ -18,6 +18,9 @@ class Vacancy(models.Model):
     deadline = models.DateField()
     link = models.URLField(blank=True)
     image = models.ImageField(upload_to='vacancies/', blank=True, null=True)
+    salary = models.CharField(max_length=255, blank=True, null=True)
+    experience = models.CharField(max_length=255, blank=True, null=True)
+    location = models.CharField(max_length=255, default='Kathmandu, Nepal')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
