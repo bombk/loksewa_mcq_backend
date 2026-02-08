@@ -1,5 +1,15 @@
 from rest_framework import serializers
-from .models import Category, Question, Option, QuestionPaper, UserProgress
+from .models import Category, PaperCategory, Question, Option, QuestionPaper, UserProgress
+
+class PaperCategorySerializer(serializers.ModelSerializer):
+    paper_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PaperCategory
+        fields = ['id', 'name', 'description', 'image', 'paper_count']
+
+    def get_paper_count(self, obj):
+        return obj.papers.count()
 
 class OptionSerializer(serializers.ModelSerializer):
     class Meta:

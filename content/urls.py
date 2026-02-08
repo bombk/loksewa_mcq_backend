@@ -3,11 +3,12 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     BlogPostViewSet, VacancyViewSet, VideoSourceViewSet, 
     HeroSlideViewSet, ContactMessageViewSet, chatbot_response,
-    AnnouncementPopupViewSet, BookViewSet
+    AnnouncementPopupViewSet, BookViewSet, BookCategoryViewSet
 )
 
 router = DefaultRouter()
 router.register(r'blogs', BlogPostViewSet)
+router.register(r'book-categories', BookCategoryViewSet)
 router.register(r'vacancies', VacancyViewSet)
 router.register(r'videos', VideoSourceViewSet)
 router.register(r'hero-slides', HeroSlideViewSet)

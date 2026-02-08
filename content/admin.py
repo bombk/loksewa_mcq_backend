@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import BlogPost, Vacancy, VideoSource, HeroSlide, ContactMessage, ChatbotKnowledge, AnnouncementPopup, Book
+from .models import BlogPost, Vacancy, VideoSource, HeroSlide,BookCategory, ContactMessage, ChatbotKnowledge, AnnouncementPopup, Book
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
@@ -12,6 +12,11 @@ class AnnouncementPopupAdmin(admin.ModelAdmin):
     list_display = ('title', 'is_active', 'created_at')
     list_editable = ('is_active',)
     search_fields = ('title', 'content')
+
+@admin.register(BookCategory)
+class BookCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description')
+    search_fields = ('name',)
 
 @admin.register(ChatbotKnowledge)
 class ChatbotKnowledgeAdmin(admin.ModelAdmin):

@@ -2,10 +2,10 @@ from rest_framework import viewsets, filters, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.db.models import Count, Q
-from .models import Category, Question, QuestionPaper, UserProgress
+from .models import Category, PaperCategory, Question, QuestionPaper, UserProgress
 from .serializers import (
-    CategorySerializer, QuestionSerializer, QuestionPaperSerializer, 
-    UserProgressSerializer
+    CategorySerializer, PaperCategorySerializer, QuestionSerializer, 
+    QuestionPaperSerializer, UserProgressSerializer
 )
 from rest_framework import permissions
 
@@ -14,10 +14,19 @@ class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'description']
+    pagination_class = None
+
+class PaperCategoryViewSet(viewsets.ModelViewSet):
+    queryset = PaperCategory.objects.all()
+    serializer_class = PaperCategorySerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'description']
+    pagination_class = None
 
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+    pagination_class = None
 
     def get_queryset(self):
         queryset = Question.objects.all()

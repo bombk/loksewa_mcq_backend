@@ -1,10 +1,10 @@
 from rest_framework import viewsets, filters
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import BlogPost, Vacancy, VideoSource, HeroSlide, ContactMessage, ChatbotKnowledge, AnnouncementPopup, Book
+from .models import BlogPost, Vacancy, VideoSource, HeroSlide, ContactMessage, ChatbotKnowledge, AnnouncementPopup, Book, BookCategory
 from .serializers import (
     BlogPostSerializer, VacancySerializer, VideoSourceSerializer, 
-    HeroSlideSerializer, ContactMessageSerializer, AnnouncementPopupSerializer, BookSerializer
+    HeroSlideSerializer, ContactMessageSerializer, AnnouncementPopupSerializer, BookSerializer, BookCategorySerializer
 )
 
 class BlogPostViewSet(viewsets.ModelViewSet):
@@ -12,6 +12,13 @@ class BlogPostViewSet(viewsets.ModelViewSet):
     serializer_class = BlogPostSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'content']
+
+class BookCategoryViewSet(viewsets.ModelViewSet):
+    queryset = BookCategory.objects.all()
+    serializer_class = BookCategorySerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'description']
+    pagination_class = None
 
 class VacancyViewSet(viewsets.ModelViewSet):
     queryset = Vacancy.objects.all()

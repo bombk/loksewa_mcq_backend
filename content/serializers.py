@@ -1,5 +1,15 @@
 from rest_framework import serializers
-from .models import BlogPost, Vacancy, VideoSource, HeroSlide, ContactMessage, AnnouncementPopup, Book
+from .models import BlogPost, Vacancy, VideoSource, HeroSlide, ContactMessage, AnnouncementPopup, Book, BookCategory
+
+class BookCategorySerializer(serializers.ModelSerializer):
+    book_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = BookCategory
+        fields = ['id', 'name', 'description', 'image', 'book_count']
+
+    def get_book_count(self, obj):
+        return obj.books.count()
 
 class BookSerializer(serializers.ModelSerializer):
     category_name = serializers.ReadOnlyField(source='category.name')
