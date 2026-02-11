@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category,PaperCategory, Question, Option, QuestionPaper
+from .models import Category, SubCategory, PaperCategory, Question, Option, QuestionPaper
 
 @admin.register(QuestionPaper)
 class QuestionPaperAdmin(admin.ModelAdmin):
@@ -22,6 +22,12 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'description')
     search_fields = ('name',)
 
+@admin.register(SubCategory)
+class SubCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'category', 'description')
+    list_filter = ('category',)
+    search_fields = ('name',)
+
 @admin.register(PaperCategory)
 class PaperCategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'description')
@@ -29,8 +35,8 @@ class PaperCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('text', 'category')
-    list_filter = ('category',)
+    list_display = ('text', 'category', 'sub_category')
+    list_filter = ('category', 'sub_category')
     search_fields = ('text', 'explanation')
     inlines = [OptionInline]
 

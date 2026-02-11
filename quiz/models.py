@@ -9,8 +9,17 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+class SubCategory(models.Model):
+    category = models.ForeignKey(Category, related_name='subcategories', on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.category.name} - {self.name}"
+
 class Question(models.Model):
     category = models.ForeignKey(Category, related_name='questions', on_delete=models.CASCADE)
+    sub_category = models.ForeignKey(SubCategory, related_name='questions', on_delete=models.SET_NULL, null=True, blank=True)
     text = models.TextField()
     explanation = models.TextField(blank=True)
 
