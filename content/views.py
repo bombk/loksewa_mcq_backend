@@ -21,13 +21,13 @@ class BookCategoryViewSet(viewsets.ModelViewSet):
     pagination_class = None
 
 class VacancyViewSet(viewsets.ModelViewSet):
-    queryset = Vacancy.objects.all()
+    queryset = Vacancy.objects.all().order_by('-created_at')
     serializer_class = VacancySerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'company', 'description']
 
 class VideoSourceViewSet(viewsets.ModelViewSet):
-    queryset = VideoSource.objects.all()
+    queryset = VideoSource.objects.all().order_by('-created_at')
     serializer_class = VideoSourceSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'description']
