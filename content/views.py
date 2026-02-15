@@ -8,7 +8,7 @@ from .serializers import (
 )
 
 class BlogPostViewSet(viewsets.ModelViewSet):
-    queryset = BlogPost.objects.all()
+    queryset = BlogPost.objects.all().order_by('-created_at')
     serializer_class = BlogPostSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'content']
@@ -33,7 +33,7 @@ class VideoSourceViewSet(viewsets.ModelViewSet):
     search_fields = ['title', 'description']
 
 class HeroSlideViewSet(viewsets.ModelViewSet):
-    queryset = HeroSlide.objects.all()
+    queryset = HeroSlide.objects.all().order_by('-created_at')
     serializer_class = HeroSlideSerializer
 
 class ContactMessageViewSet(viewsets.ModelViewSet):
