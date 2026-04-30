@@ -30,9 +30,12 @@ class QuestionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Question.objects.all()
-        category_id = self.request.query_params.get('category', None)
-        if category_id is not None:
-            queryset = queryset.filter(category_id=category_id)
+        category_param = self.request.query_params.get('category', None)
+        if category_param is not None:
+            if category_param.isdigit():
+                queryset = queryset.filter(category_id=category_param)
+            else:
+                queryset = queryset.filter(category__slug=category_param)
         return queryset
 
 class QuestionPaperViewSet(viewsets.ModelViewSet):
@@ -44,9 +47,12 @@ class QuestionPaperViewSet(viewsets.ModelViewSet):
         # Public users only see verified papers
         queryset = QuestionPaper.objects.filter(is_verified=True)
         
-        category_id = self.request.query_params.get('category', None)
-        if category_id is not None:
-            queryset = queryset.filter(category_id=category_id)
+        category_param = self.request.query_params.get('category', None)
+        if category_param is not None:
+            if category_param.isdigit():
+                queryset = queryset.filter(category_id=category_param)
+            else:
+                queryset = queryset.filter(category__slug=category_param)
             
         return queryset.order_by('-uploaded_at')
 

@@ -6,7 +6,7 @@ class PaperCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PaperCategory
-        fields = ['id', 'name', 'description', 'image', 'paper_count']
+        fields = ['id', 'name', 'slug', 'description', 'image', 'paper_count']
 
     def get_paper_count(self, obj):
         return obj.papers.count()
@@ -16,7 +16,7 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubCategory
-        fields = ['id', 'name', 'description', 'question_count']
+        fields = ['id', 'name', 'slug', 'description', 'question_count']
 
     def get_question_count(self, obj):
         return obj.questions.count()
@@ -29,11 +29,13 @@ class OptionSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     options = OptionSerializer(many=True, read_only=True)
     category_name = serializers.ReadOnlyField(source='category.name')
+    category_slug = serializers.ReadOnlyField(source='category.slug')
     sub_category_name = serializers.ReadOnlyField(source='sub_category.name')
+    sub_category_slug = serializers.ReadOnlyField(source='sub_category.slug')
     
     class Meta:
         model = Question
-        fields = ['id', 'category', 'category_name', 'sub_category', 'sub_category_name', 'text', 'explanation', 'options']
+        fields = ['id', 'category', 'category_name', 'category_slug', 'sub_category', 'sub_category_name', 'sub_category_slug', 'text', 'explanation', 'options']
 
 class CategorySerializer(serializers.ModelSerializer):
     question_count = serializers.SerializerMethodField()
@@ -41,7 +43,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'description', 'image', 'question_count', 'subcategories']
+        fields = ['id', 'name', 'slug', 'description', 'image', 'question_count', 'subcategories']
 
     def get_question_count(self, obj):
         return obj.questions.count()
