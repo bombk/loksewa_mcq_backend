@@ -27,10 +27,6 @@ class Migration(migrations.Migration):
             model_name='questionpaper',
             index=models.Index(fields=['is_verified', '-uploaded_at'], name='quiz_paper_verified_date_idx'),
         ),
-        migrations.AddConstraint(
-            model_name='userprogress',
-            constraint=models.UniqueConstraint(fields=('user', 'question'), name='unique_user_question_progress'),
-        ),
         migrations.AddIndex(
             model_name='userprogress',
             index=models.Index(fields=['user', 'answered_at'], name='quiz_progress_user_date_idx'),
