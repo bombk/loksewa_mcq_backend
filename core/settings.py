@@ -69,7 +69,7 @@ DATABASES = {
     }
 }
 
-# Redis cache. Override REDIS_URL in .env for Docker/production.
+# Redis cache. Override REDIS_URL in .env for cPanel/production.
 REDIS_URL = os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/1')
 CACHES = {
     'default': {
@@ -91,9 +91,15 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = 'static/'
+# Static files
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static'] if (BASE_DIR / 'static').exists() else []
+
+# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
