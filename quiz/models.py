@@ -112,3 +112,55 @@ class UserProgress(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.question.text[:20]} - {'Correct' if self.is_correct else 'Incorrect'}"
+
+
+class MockTest(models.Model):
+    STATUS_CHOICES = [
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed'),
+        ('expired', 'Expired'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mock_tests')
+    title = models.CharField(max_length=255, default='Mock Test')
+    duration_minutes = models.PositiveIntegerField(default=60)
+    total_questions = models.PositiveIntegerField(default=100)
+    score = models.PositiveIntegerField(default=0)
+    correct_answers = models.PositiveIntegerField(default=0)
+    attempted_questions = models.PositiveIntegerField(default=0)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='in_progress')
+    started_at = models.DateTimeField(auto_now_add=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['user', '-started_at']),
+            models.Index(fields=['user', 'status']),
+        ]
+
+    def __str__(self):
+        return f'{self.user.username} - {self.title} - {self.status}'
+
+
+class MockTestQuestion(models.Model):
+    mock_test = models.ForeignKey(MockTest, on_delete=models.CASCADE, related_name='test_questions')
+    question = models.ForeignKey(Question, on_delete=models.PROTECT, related_name='mock_test_questions')
+    selected_option = models.ForeignKey(
+        Option, on_delete=models.SET_NULL, null=True, blank=True, related_name='mock_test_answers'
+    )
+    is_correct = models.BooleanField(default=False)
+    answered_at = models.DateTimeField(null=True, blank=True)
+    question_order = models.PositiveIntegerField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['mock_test', 'question'], name='unique_mock_test_question'),
+            models.UniqueConstraint(fields=['mock_test', 'question_order'], name='unique_mock_test_question_order'),
+        ]
+        indexes = [
+            models.Index(fields=['mock_test', 'question_order']),
+            models.Index(fields=['mock_test', 'is_correct']),
+        ]
+
+    def __str__(self):
+        return f'{self.mock_test_id} - Q{self.question_order}'
