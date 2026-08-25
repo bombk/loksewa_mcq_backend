@@ -68,8 +68,6 @@ DATABASES = {
         'OPTIONS': {'init_command': os.getenv('DB_INIT_COMMAND')},
     }
 }
-
-# Optional Redis cache. Configure REDIS_URL in .env on cPanel when Redis is available.
 REDIS_URL = os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/1')
 CACHES = {
     'default': {
@@ -91,7 +89,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files - cPanel/Passenger compatible
+
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static'] if (BASE_DIR / 'static').exists() else []
