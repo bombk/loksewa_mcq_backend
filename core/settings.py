@@ -68,8 +68,6 @@ DATABASES = {
         'OPTIONS': {'init_command': os.getenv('DB_INIT_COMMAND')},
     }
 }
-
-# Redis cache. Override REDIS_URL in .env for cPanel/production.
 REDIS_URL = os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/1')
 CACHES = {
     'default': {
@@ -91,7 +89,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files
+
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static'] if (BASE_DIR / 'static').exists() else []

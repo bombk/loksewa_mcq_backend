@@ -1,5 +1,8 @@
 from rest_framework import serializers
-from .models import Category, SubCategory, PaperCategory, Question, Option, QuestionPaper, UserProgress
+from .models import (
+    Category, SubCategory, PaperCategory, Question, Option, QuestionPaper,
+    UserProgress, MockTest, MockTestQuestion,
+)
 
 
 class PaperCategorySerializer(serializers.ModelSerializer):
@@ -60,3 +63,28 @@ class UserProgressSerializer(serializers.ModelSerializer):
         model = UserProgress
         fields = ['id', 'user', 'question', 'is_correct', 'answered_at']
         read_only_fields = ['id', 'user', 'answered_at']
+
+
+class MockTestQuestionSerializer(serializers.ModelSerializer):
+    question = QuestionSerializer(read_only=True)
+    selected_option = OptionSerializer(read_only=True)
+
+    class Meta:
+        model = MockTestQuestion
+        fields = [
+            'id', 'question', 'question_order', 'selected_option',
+            'is_correct', 'answered_at'
+        ]
+
+
+class MockTestSerializer(serializers.ModelSerializer):
+    test_questions = MockTestQuestionSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = MockTest
+        fields = [
+            'id', 'title', 'duration_minutes', 'total_questions',
+            'score', 'correct_answers', 'attempted_questions', 'status',
+            'started_at', 'completed_at', 'test_questions'
+        ]
+        read_only_fields = fields
