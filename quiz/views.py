@@ -1,8 +1,9 @@
 from datetime import timedelta
 
+from django.core.cache import cache
 from django.db.models import Count, Q
 from django.utils import timezone
-from rest_framework import filters, permissions, status, viewsets
+from rest_framework import filters, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -29,6 +30,15 @@ class CategoryViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'description']
     pagination_class = None
+
+    def list(self, request, *args, **kwargs):
+        cache_key = 'homepage:categories:v1'
+        data = cache.get(cache_key)
+        if data is None:
+            queryset = self.filter_queryset(self.get_queryset())
+            data = self.get_serializer(queryset, many=True).data
+            cache.set(cache_key, data, 600)
+        return Response(data)
 
 
 class PaperCategoryViewSet(viewsets.ModelViewSet):
@@ -98,7 +108,6 @@ class UserProgressViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def summary(self, request):
         progress = UserProgress.objects.filter(user=request.user)
-
         total_attempts = progress.count()
         correct_attempts = progress.filter(is_correct=True).count()
         category_stats = progress.values('question__category__name').annotate(
@@ -126,6 +135,11 @@ class UserProgressViewSet(viewsets.ModelViewSet):
     def leaderboard(self, request):
         from django.contrib.auth.models import User
 
+        cache_key = 'leaderboard:top5:v1'
+        data = cache.get(cache_key)
+        if data is not None:
+            return Response(data)
+
         top_users = (
             User.objects.annotate(
                 score=Count('progress', filter=Q(progress__is_correct=True))
@@ -134,7 +148,7 @@ class UserProgressViewSet(viewsets.ModelViewSet):
             .order_by('-score', 'username')[:5]
         )
 
-        return Response([
+        data = [
             {
                 'username': user.username,
                 'score': user.score,
@@ -146,4 +160,6 @@ class UserProgressViewSet(viewsets.ModelViewSet):
                 'color_seed': len(user.username),
             }
             for user in top_users
-        ])
+        ]
+        cache.set(cache_key, data, 60)
+        return Response(data)

@@ -4,6 +4,8 @@ django-ckeditor-5==0.2.19
 django-cors-headers==4.9.0
 djangorestframework==3.16.1
 djangorestframework_simplejwt==5.5.1
+django-redis==6.0.0
+redis==7.0.1
 fuzzywuzzy==0.18.0
 pymysql==1.1.0
 pillow==11.3.0
